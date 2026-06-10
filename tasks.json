@@ -1,0 +1,35 @@
+[
+  {
+    "id": "einfach_1",
+    "level": "Einfach",
+    "titel": "Überzeugende Nachricht",
+    "farbe": "🟢",
+    "lernziel": "Rolle, Zielgruppe und Ton vorgeben",
+    "aufgabe": "Formuliere eine überzeugende Nachricht, mit der du deine Klasse motivierst, beim Schulfest mitzuhelfen.",
+    "typischer_prompt": "Schreib eine Nachricht für ein Schulfest.",
+    "experten_prompt": "Du bist Klassensprecher:in einer 11. Klasse. Formuliere eine kurze, freundliche und motivierende Nachricht an deine Mitschüler:innen. Ziel ist, sie dazu zu bewegen, freiwillig beim Schulfest mitzuhelfen. Der Ton soll locker, aber überzeugend sein. Die Nachricht soll maximal 120 Wörter lang sein.",
+    "trick": "Der Prompt wird besser, weil Rolle, Zielgruppe, Ziel, Ton und Länge klar angegeben sind."
+  },
+  {
+    "id": "schwierig_1",
+    "level": "Schwierig",
+    "titel": "Falschmeldung prüfen",
+    "farbe": "🔴",
+    "lernziel": "Begründung und Prüfschritte einfordern",
+    "aufgabe": "Prüfe eine angebliche Nachricht über ein neues Handyverbot an Schulen kritisch.",
+    "typischer_prompt": "Ist diese Nachricht fake?",
+    "experten_prompt": "Analysiere die folgende Nachricht kritisch. Prüfe Schritt für Schritt: 1. Welche Behauptung wird aufgestellt? 2. Gibt es konkrete Quellen oder nur vage Aussagen? 3. Welche Hinweise sprechen für oder gegen Glaubwürdigkeit? 4. Welche Informationen müsste man zusätzlich überprüfen? Gib am Ende ein vorsichtiges Fazit.",
+    "trick": "Die KI soll nicht nur ein Urteil abgeben, sondern ihren Prüfprozess sichtbar machen."
+  },
+  {
+    "id": "spassig_1",
+    "level": "Spassig",
+    "titel": "Textabenteuer",
+    "farbe": "🟣",
+    "lernziel": "Regeln, Rolle und Kreativität nutzen",
+    "aufgabe": "Lass die KI ein kurzes Abenteuer-Spiel leiten, in dem du Entscheidungen treffen musst.",
+    "typischer_prompt": "Mach ein Abenteuer.",
+    "experten_prompt": "Du bist Spielleiter:in eines kurzen Textabenteuers für Schüler:innen der Oberstufe. Die Geschichte spielt in einer Schule der Zukunft. Regeln: Erzähle immer nur einen Abschnitt. Gib am Ende genau drei Entscheidungsmöglichkeiten A, B und C. Warte danach auf meine Auswahl. Halte die Geschichte spannend, aber jugendfrei. Verwende einen humorvollen Ton.",
+    "trick": "Die KI funktioniert besser, wenn sie eine klare Rolle, Regeln und ein Format bekommt."
+  }
+]

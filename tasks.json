@@ -5,11 +5,11 @@
     "titel": "Überzeugende Nachricht",
     "farbe": "🟢",
     "lernziel": "Rolle, Zielgruppe und Ton vorgeben",
-    "aufgabe": "Formuliere eine überzeugende Nachricht, mit der du deine Klasse motivierst, beim Schulfest mitzuhelfen.",
-    "typischer_prompt": "Schreib eine Nachricht für ein Schulfest.",
-    "experten_prompt": "Du bist Klassensprecher:in einer 11. Klasse. Formuliere eine kurze, freundliche und motivierende Nachricht an deine Mitschüler:innen. Ziel ist, sie dazu zu bewegen, freiwillig beim Schulfest mitzuhelfen. Der Ton soll locker, aber überzeugend sein. Die Nachricht soll maximal 120 Wörter lang sein.",
-    "trick": "Der Prompt wird besser, weil Rolle, Zielgruppe, Ziel, Ton und Länge klar angegeben sind."
-  },
+    "aufgabe": "Formuliere eine überzeugende Nachricht, mit der du deine Eltern überzeugst, am Wochenende eine Hausparty machen zu dürfen, während sie nicht zu Hause sind.",
+    "typischer_prompt": "Schreib eine Nachricht an meine Eltern, dass ich eine Hausparty machen darf.",
+    "experten_prompt": "Du bist ein:e 18-Jährige:r und möchtest deine eher strengen Eltern überzeugen, am Wochenende eine kleine Hausparty zu erlauben, obwohl sie nicht zu Hause sind. Formuliere eine kurze, respektvolle und zugleich clevere Nachricht (WhatsApp-Stil, maximal 5 Sätze). Nimm ihre möglichen Sorgen vorweg (Nachbarn, Sauberkeit, keine Fremden), schlage klare Regeln vor und biete eine Gegenleistung an.",
+    "trick": "Der Prompt wird besser, weil Rolle, Zielgruppe, Ziel, Ton und Länge klar angegeben sind – und weil mögliche Einwände von vornherein entkräftet werden."
+},
   {
     "id": "schwierig_1",
     "level": "Schwierig",

@@ -1,7 +1,11 @@
 # pip install streamlit
+# streamlit run app.py
 
 import json
 import streamlit as st
+
+import os
+from openai import OpenAI
 
 st.set_page_config(
     page_title="Prompt Battle Arena",
@@ -12,6 +16,51 @@ st.set_page_config(
 # Aufgaben laden
 with open("tasks.json", "r", encoding="utf-8") as file:
     tasks = json.load(file)
+
+def generate_ai_answer(student_prompt, selected_task):
+    api_key = st.secrets.get("OPENAI_API_KEY", os.getenv("OPENAI_API_KEY"))
+    model = st.secrets.get("OPENAI_MODEL", "gpt-5.5")
+
+    if not api_key:
+        return "Fehler: Es wurde kein OpenAI API-Key gefunden."
+
+    client = OpenAI(api_key=api_key)
+
+    system_prompt = """
+    Du bist ein KI-Chatbot in einem KI-Literacy-Workshop für Oberstufenschüler:innen.
+
+    Deine Aufgabe:
+    - Beantworte den Prompt der Schüler:innen verständlich.
+    - Bleibe bei der Workshop-Aufgabe.
+    - Erfinde keine Quellen.
+    - Frage nicht nach echten personenbezogenen Daten.
+    - Antworte altersgerecht und nicht zu lang.
+    - Gib keine Bewertung des Prompts ab. Das passiert später im Workshop.
+    """
+
+    user_input = f"""
+    Workshop-Kategorie: {selected_task["level"]}
+    Workshop-Titel: {selected_task["titel"]}
+    Lernziel: {selected_task["lernziel"]}
+    Aufgabe: {selected_task["aufgabe"]}
+
+    Prompt der Schüler:innen:
+    {student_prompt}
+
+    Beantworte jetzt den Prompt der Schüler:innen so, als wärst du die KI, die getestet wird.
+    """
+
+    try:
+        response = client.responses.create(
+            model=model,
+            instructions=system_prompt,
+            input=user_input
+        )
+
+        return response.output_text
+
+    except Exception as error:
+        return f"Fehler bei der KI-Anfrage: {error}"
 
 # Session-State vorbereiten
 if "selected_task" not in st.session_state:
@@ -71,10 +120,11 @@ if st.button("Prompt testen"):
     if not student_prompt.strip():
         st.warning("Bitte schreibt zuerst einen Prompt.")
     else:
-        st.session_state.ki_answer = (
-            "Hier würde später die KI-Antwort erscheinen. "
-            "Für den ersten Prototyp testen wir nur den Ablauf."
-        )
+        with st.spinner("Die KI antwortet..."):
+            st.session_state.ki_answer = generate_ai_answer(
+                student_prompt,
+                selected_task
+            )
 
 # Ergebnis anzeigen
 if st.session_state.ki_answer:
@@ -103,3 +153,4 @@ if st.button("Neue Runde starten"):
     st.session_state.ki_answer = ""
     st.session_state.reflection = ""
     st.rerun()
+

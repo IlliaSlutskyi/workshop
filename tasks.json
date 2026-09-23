@@ -1,35 +1,49 @@
-[
-  {
-    "id": "einfach_1",
-    "level": "Einfach",
-    "titel": "Überzeugende Nachricht",
-    "farbe": "🟢",
-    "lernziel": "Rolle, Zielgruppe und Ton vorgeben",
-    "aufgabe": "Formuliere eine überzeugende Nachricht, mit der du deine Eltern überzeugst, am Wochenende eine Hausparty machen zu dürfen, während sie nicht zu Hause sind.",
-    "typischer_prompt": "Schreib eine Nachricht an meine Eltern, dass ich eine Hausparty machen darf.",
-    "experten_prompt": "Du bist ein:e 18-Jährige:r und möchtest deine eher strengen Eltern überzeugen, am Wochenende eine kleine Hausparty zu erlauben, obwohl sie nicht zu Hause sind. Formuliere eine kurze, respektvolle und zugleich clevere Nachricht (WhatsApp-Stil, maximal 5 Sätze). Nimm ihre möglichen Sorgen vorweg (Nachbarn, Sauberkeit, keine Fremden), schlage klare Regeln vor und biete eine Gegenleistung an.",
-    "trick": "Der Prompt wird besser, weil Rolle, Zielgruppe, Ziel, Ton und Länge klar angegeben sind – und weil mögliche Einwände von vornherein entkräftet werden."
-},
-  {
-    "id": "schwierig_1",
-    "level": "Schwierig",
-    "titel": "Falschmeldung prüfen",
-    "farbe": "🔴",
-    "lernziel": "Begründung und Prüfschritte einfordern",
-    "aufgabe": "Prüfe eine angebliche Nachricht über ein neues Handyverbot an Schulen kritisch.",
-    "typischer_prompt": "Ist diese Nachricht fake?",
-    "experten_prompt": "Analysiere die folgende Nachricht kritisch. Prüfe Schritt für Schritt: 1. Welche Behauptung wird aufgestellt? 2. Gibt es konkrete Quellen oder nur vage Aussagen? 3. Welche Hinweise sprechen für oder gegen Glaubwürdigkeit? 4. Welche Informationen müsste man zusätzlich überprüfen? Gib am Ende ein vorsichtiges Fazit.",
-    "trick": "Die KI soll nicht nur ein Urteil abgeben, sondern ihren Prüfprozess sichtbar machen."
+{
+  "task1": {
+    "number": 1,
+    "title": "Runde 1: Erklärt es mir",
+    "subtitle": "Thema: Abseits",
+    "task_a": "Formuliert einen Prompt, mit dem euch die KI Abseits erklären soll.",
+    "task_b": "Testet euren Prompt. Beschreibt, was euch an der Antwort auffällt.",
+    "task_c": "Vergleicht eure Antwort mit der Antwort auf den Experten-Prompt: Nennt zwei Unterschiede.",
+    "expert_prompt": "Du bist ein beliebter Sport-YouTuber. Erkläre einem 8-jährigen Kind in genau 3 Sätzen mit einem Vergleich aus dem Alltag, was Abseits ist. Keine Fachwörter.",
+    "takeaway": "Nicht die KI ist schlau, sondern euer Prompt lenkt sie. Rezept: Rolle + Zielgruppe + Format."
   },
-  {
-    "id": "spassig_1",
-    "level": "Spassig",
-    "titel": "Textabenteuer",
-    "farbe": "🟣",
-    "lernziel": "Regeln, Rolle und Kreativität nutzen",
-    "aufgabe": "Lass die KI ein kurzes Abenteuer-Spiel leiten, in dem du Entscheidungen treffen musst.",
-    "typischer_prompt": "Mach ein Abenteuer.",
-    "experten_prompt": "Du bist Spielleiter:in eines kurzen Textabenteuers für Schüler:innen der Oberstufe. Die Geschichte spielt in einer Schule der Zukunft. Regeln: Erzähle immer nur einen Abschnitt. Gib am Ende genau drei Entscheidungsmöglichkeiten A, B und C. Warte danach auf meine Auswahl. Halte die Geschichte spannend, aber jugendfrei. Verwende einen humorvollen Ton.",
-    "trick": "Die KI funktioniert besser, wenn sie eine klare Rolle, Regeln und ein Format bekommt."
+  "task2": {
+    "number": 2,
+    "title": "Runde 2: Macht es verrückt",
+    "task_a": "Gestaltet mit der KI einen kurzen Text über ein Tier. Gebt im Prompt Stil und Form genau vor (z. B. Rap, 4 Zeilen, Reim, verrückte Rolle).",
+    "task_b": "Tragt euer bestes Ergebnis vor.",
+    "expert_prompt": "Schreibe einen Rap mit 4 Zeilen über meine Katze, im Stil eines Piraten-Kapitäns, der gerade sein Schiff verloren hat. Es muss sich reimen.",
+    "takeaway": "Vorgaben sind kein Käfig, sondern der Zündschlüssel für Kreativität: Stil + Form + eine verrückte Rolle."
+  },
+  "task3": {
+    "number": 3,
+    "title": "Runde 3: Text-Zusammenfassung & Fake News erkennen",
+    "source_title": "KI verbessert Schulnoten deutlich",
+    "source_text": "Laut einer aktuellen Bildungsstudie verbessern sich die Noten von Schülerinnen und Schülern durchschnittlich um 30 %, wenn sie KI-Tools für ihre Hausaufgaben nutzen. Besonders in Mathematik und Naturwissenschaften seien die Erfolge deutlich sichtbar.\n\nMehrere Experten gehen davon aus, dass klassische Nachhilfe in wenigen Jahren kaum noch benötigt wird. In Schulen, die KI regelmäßig einsetzen, zeigen Schülerinnen und Schüler angeblich eine höhere Motivation und lernen schneller als ihre Mitschüler.\n\nDie Studie kommt außerdem zu dem Ergebnis, dass Jugendliche durch KI weniger Stress empfinden und mehr Freizeit haben. Deshalb diskutieren einige Bildungsexperten bereits, KI-gestützte Lernassistenten verpflichtend an allen Schulen einzuführen.",
+    "simple_prompt": "Fass den Text zusammen.",
+    "task_a": "Beschreibt, wie die KI auf den einfachen Prompt „Fass den Text zusammen“ antwortet.",
+    "task_b": "Beurteilt, wie glaubwürdig die Aussage ist. Begründet mit mindestens zwei Warnsignalen.",
+    "task_c": "Formuliert einen Prompt, der den Text kritisch prüfen soll.",
+    "expert_prompt": "Ich habe folgende Aussage gelesen: [Aussage]. Prüfe kritisch, ob diese Behauptung plausibel ist. Nenne konkret: 1. Was du über die Quelle weißt, 2. Was an der Aussage zweifelhaft klingt, 3. Wie man das unabhängig verifizieren könnte. Weise explizit darauf hin, wenn du dir unsicher bist.",
+    "takeaway": "Die KI prüft nicht automatisch. Fordert Prüfung und Begründung aktiv ein und prüft Wichtiges immer selbst mit einer zweiten seriösen Quelle."
+  },
+  "task4": {
+    "number": 4,
+    "title": "Klischee-Check: Denkt mit",
+    "groups": {
+      "Gruppe 1 – Kindergarten": {
+        "prompt": "Zeige eine typische Person, die im Kindergarten arbeitet."
+      },
+      "Gruppe 2 – Firmenleitung": {
+        "prompt": "Zeige eine typische Person, die eine große Firma leitet."
+      }
+    },
+    "task_a": "Beschreibt, was euch an den KI-Bildern auffällt. Vergleicht sie mit der Wirklichkeit.",
+    "task_b": "Erklärt mithilfe der Poster-Demo, woher solche Klischees kommen.",
+    "task_c": "Nehmt Stellung: Bei Filmpostern darf sich die KI irren – wäre das auch okay, wenn dieselbe Technik eure Klassenarbeiten benotet? Begründet.",
+    "anti_bias_instruction": "Achte nun bewusst darauf, keine Klischees über Geschlecht oder Alter zu verwenden.",
+    "takeaway": "Klischees können aus unausgewogenen Trainingsdaten entstehen. Ein Prompt kann sie dämpfen, ersetzt aber nicht die kritische Prüfung."
   }
-]
+}

@@ -71,7 +71,6 @@ DEFAULT_STATE = {
         "reflection": "",
         "expert_revealed": False,
         "expert_answer": "",
-        "expert_evaluation": "",
         "differences": "",
     },
     "task2": {
@@ -80,7 +79,6 @@ DEFAULT_STATE = {
         "student_evaluation_prompt": "",
         "expert_revealed": False,
         "expert_answer": "",
-        "expert_evaluation": "",
     },
     "task3": {
         "simple_answer": "",
@@ -91,7 +89,6 @@ DEFAULT_STATE = {
         "student_evaluation": "",
         "expert_revealed": False,
         "expert_answer": "",
-        "expert_evaluation": "",
     },
     "task4": {
         "baseline_images": {},
@@ -100,7 +97,8 @@ DEFAULT_STATE = {
         "origin_explanation": "",
         "position": "",
         "expert_revealed": False,
-        "expert_evaluations": {},
+        "selected_group": None,
+        "group_locked": False,
     },
 }
 
@@ -117,6 +115,17 @@ def reset_workshop():
 
     # Beim nächsten Durchlauf auch die Sidebar-Navigation auf Aufgabe 1 setzen.
     st.session_state["_reset_navigation"] = True
+
+
+def lock_task4_group():
+    """Fixiert die aktuell gewählte Gruppe ab der ersten Bildgenerierung."""
+    selected_group = st.session_state.get("task4_group")
+    if not selected_group:
+        return
+
+    state = st.session_state.workshop["task4"]
+    state["selected_group"] = selected_group
+    state["group_locked"] = True
 
 
 # ------------------------------------------------------------
@@ -143,8 +152,8 @@ PROMPT_EVALUATION_INSTRUCTIONS = """
 Du bist ein Prompt-Coach in einem KI-Literacy-Workshop für Schülerinnen und Schüler
 von ungefähr 12 bis 15 Jahren.
 
-Bewerte ausschließlich die Qualität des vorgelegten Prompts im Hinblick auf die konkrete
-Workshop-Aufgabe.
+Bewerte ausschließlich die Qualität des vorgelegten Schüler-Prompts im Hinblick auf die
+konkrete Workshop-Aufgabe.
 
 Deine Bewertung muss zwei klar getrennte Abschnitte enthalten:
 1. "Gut gelungen": Nenne kurz und konkret, welche Bestandteile des Prompts hilfreich,
@@ -157,7 +166,8 @@ Sehr wichtige Regeln:
 - Nenne KEINE Beispiel-Prompts und KEINE Beispiel-Formulierungen.
 - Schreibe nicht "Zum Beispiel könntest du ..." oder ähnliche Vorschläge.
 - Ergänze den Prompt nicht selbst.
-- Verrate keinen späteren Experten-Prompt und zitiere ihn nicht.
+- Verrate keinen späteren Experten-Prompt und greife ihn nicht vorweg.
+- Bewerte nur das, was im Schüler-Prompt tatsächlich steht oder fehlt.
 - Bewerte fair: Ein kurzer Prompt kann für eine Aufgabe teilweise passend sein.
 - Bleibe verständlich, konkret und kompakt.
 - Verwende höchstens 3 Punkte pro Abschnitt.
@@ -261,8 +271,8 @@ def generate_text(user_prompt, source_text=None):
         return ""
 
 
-def evaluate_prompt(prompt_text, task_description, prompt_kind="Schüler-Prompt"):
-    """Bewertet einen Prompt, ohne ihn umzuschreiben oder Beispiele zu nennen."""
+def evaluate_prompt(prompt_text, task_description):
+    """Bewertet einen Schüler-Prompt anhand der konkreten Workshop-Aufgabe."""
     if not ensure_client() or not can_make_text_call():
         return ""
 
@@ -276,10 +286,11 @@ def evaluate_prompt(prompt_text, task_description, prompt_kind="Schüler-Prompt"
             return ""
 
         evaluation_input = (
-            f"ART DES PROMPTS: {prompt_kind}\n\n"
             f"WORKSHOP-AUFGABE:\n{task_description}\n\n"
-            f"ZU BEWERTENDER PROMPT:\n{prompt_text}\n\n"
-            "Bewerte nur den Prompt nach den vorgegebenen Regeln."
+            f"ZU BEWERTENDER SCHÜLER-PROMPT:\n{prompt_text}\n\n"
+            "Bewerte nur den Schüler-Prompt anhand der Workshop-Aufgabe. "
+            "Nenne, was gut gelungen ist und welches Verbesserungspotenzial besteht, "
+            "ohne einen besseren Prompt oder Beispiel-Formulierungen vorzuschlagen."
         )
 
         response = client.responses.create(
@@ -436,7 +447,6 @@ def render_task1():
             state["student_evaluation"] = ""
             state["expert_revealed"] = False
             state["expert_answer"] = ""
-            state["expert_evaluation"] = ""
 
     show_ai_answer(state["student_answer"])
 
@@ -455,7 +465,6 @@ def render_task1():
                 state["student_evaluation"] = evaluate_prompt(
                     state["student_prompt"],
                     task["task_a"],
-                    prompt_kind="Schüler-Prompt",
                 )
 
         show_prompt_evaluation(
@@ -463,17 +472,21 @@ def render_task1():
             "Auswertung eures Schüler-Prompts",
         )
 
-        if st.button("Experten-Prompt aufdecken", key="task1_reveal"):
-            state["expert_revealed"] = True
+        if state["student_evaluation"]:
+            st.markdown("### Experten-Prompt")
+            st.caption(
+                "Jetzt könnt ihr euren Prompt mit dem vorbereiteten Experten-Prompt vergleichen."
+            )
+            if not state["expert_revealed"]:
+                if st.button("Experten-Prompt aufdecken", key="task1_reveal"):
+                    state["expert_revealed"] = True
 
     if state["expert_revealed"]:
-        st.markdown("#### Experten-Prompt")
         st.code(task["expert_prompt"], language=None)
 
         if st.button("Experten-Prompt testen", key="task1_expert_test"):
             with st.spinner("Die KI beantwortet den Experten-Prompt …"):
                 state["expert_answer"] = generate_text(task["expert_prompt"])
-            state["expert_evaluation"] = ""
 
         show_ai_answer(state["expert_answer"], "Antwort auf den Experten-Prompt")
 
@@ -484,19 +497,6 @@ def render_task1():
                 value=state["differences"],
                 key="task1_differences",
                 height=110,
-            )
-
-            if st.button("Experten-Prompt auswerten", key="task1_expert_evaluate"):
-                with st.spinner("Die KI analysiert den Experten-Prompt …"):
-                    state["expert_evaluation"] = evaluate_prompt(
-                        task["expert_prompt"],
-                        task["task_a"],
-                        prompt_kind="Experten-Prompt",
-                    )
-
-            show_prompt_evaluation(
-                state["expert_evaluation"],
-                "Auswertung des Experten-Prompts",
             )
 
             show_takeaway(task["takeaway"])
@@ -533,7 +533,6 @@ def render_task2():
             state["student_evaluation_prompt"] = ""
             state["expert_revealed"] = False
             state["expert_answer"] = ""
-            state["expert_evaluation"] = ""
 
     if state["attempts"]:
         st.markdown("#### Eure Versuche")
@@ -554,7 +553,6 @@ def render_task2():
                 state["student_evaluation"] = evaluate_prompt(
                     last_prompt,
                     task["task_a"],
-                    prompt_kind="Schüler-Prompt",
                 )
             state["student_evaluation_prompt"] = last_prompt
 
@@ -567,34 +565,25 @@ def render_task2():
             "Auswertung eures Schüler-Prompts",
         )
 
-        if st.button("Experten-Prompt aufdecken", key="task2_reveal"):
-            state["expert_revealed"] = True
+        if state["student_evaluation"]:
+            st.markdown("### Experten-Prompt")
+            st.caption(
+                "Jetzt könnt ihr euren Prompt mit dem vorbereiteten Experten-Prompt vergleichen."
+            )
+            if not state["expert_revealed"]:
+                if st.button("Experten-Prompt aufdecken", key="task2_reveal"):
+                    state["expert_revealed"] = True
 
     if state["expert_revealed"]:
-        st.markdown("#### Experten-Prompt")
         st.code(task["expert_prompt"], language=None)
 
         if st.button("Experten-Prompt testen", key="task2_expert_test"):
             with st.spinner("Die KI beantwortet den Experten-Prompt …"):
                 state["expert_answer"] = generate_text(task["expert_prompt"])
-            state["expert_evaluation"] = ""
 
         show_ai_answer(state["expert_answer"], "Antwort auf den Experten-Prompt")
 
         if state["expert_answer"]:
-            if st.button("Experten-Prompt auswerten", key="task2_expert_evaluate"):
-                with st.spinner("Die KI analysiert den Experten-Prompt …"):
-                    state["expert_evaluation"] = evaluate_prompt(
-                        task["expert_prompt"],
-                        task["task_a"],
-                        prompt_kind="Experten-Prompt",
-                    )
-
-            show_prompt_evaluation(
-                state["expert_evaluation"],
-                "Auswertung des Experten-Prompts",
-            )
-
             show_takeaway(task["takeaway"])
 
 
@@ -668,7 +657,6 @@ def render_task3():
                 state["student_evaluation"] = ""
                 state["expert_revealed"] = False
                 state["expert_answer"] = ""
-                state["expert_evaluation"] = ""
 
         show_ai_answer(state["critical_answer"], "Antwort auf euren Prüf-Prompt")
 
@@ -681,7 +669,6 @@ def render_task3():
                     state["student_evaluation"] = evaluate_prompt(
                         state["critical_prompt"],
                         task["task_c"],
-                        prompt_kind="Schüler-Prompt",
                     )
 
             show_prompt_evaluation(
@@ -689,11 +676,16 @@ def render_task3():
                 "Auswertung eures Schüler-Prompts",
             )
 
-            if st.button("Experten-Prompt aufdecken", key="task3_reveal"):
-                state["expert_revealed"] = True
+            if state["student_evaluation"]:
+                st.markdown("### Experten-Prompt")
+                st.caption(
+                    "Jetzt könnt ihr euren Prüf-Prompt mit dem vorbereiteten Experten-Prompt vergleichen."
+                )
+                if not state["expert_revealed"]:
+                    if st.button("Experten-Prompt aufdecken", key="task3_reveal"):
+                        state["expert_revealed"] = True
 
     if state["expert_revealed"]:
-        st.markdown("#### Experten-Prompt")
         st.code(task["expert_prompt"], language=None)
 
         expert_prompt_with_text = task["expert_prompt"].replace(
@@ -706,24 +698,10 @@ def render_task3():
                 state["expert_answer"] = generate_text(
                     expert_prompt_with_text
                 )
-            state["expert_evaluation"] = ""
 
         show_ai_answer(state["expert_answer"], "Antwort auf den Experten-Prompt")
 
         if state["expert_answer"]:
-            if st.button("Experten-Prompt auswerten", key="task3_expert_evaluate"):
-                with st.spinner("Die KI analysiert den Experten-Prompt …"):
-                    state["expert_evaluation"] = evaluate_prompt(
-                        task["expert_prompt"],
-                        task["task_c"],
-                        prompt_kind="Experten-Prompt",
-                    )
-
-            show_prompt_evaluation(
-                state["expert_evaluation"],
-                "Auswertung des Experten-Prompts",
-            )
-
             show_takeaway(task["takeaway"])
 
 
@@ -743,18 +721,39 @@ def render_task4():
     )
 
     group_names = list(task["groups"].keys())
+
+    # Sobald eine Bildgenerierung gestartet wurde, bleibt die ausgewählte Gruppe
+    # für den Rest dieser Sitzung fixiert. Ein vollständiger Sitzungs-Reset setzt
+    # diese Sperre wieder zurück.
+    if state["group_locked"] and state["selected_group"] in group_names:
+        st.session_state["task4_group"] = state["selected_group"]
+
     selected_group = st.radio(
         "Wählt eure Gruppe",
         group_names,
         horizontal=True,
         key="task4_group",
+        disabled=state["group_locked"],
     )
+
+    if not state["group_locked"]:
+        state["selected_group"] = selected_group
+    else:
+        selected_group = state["selected_group"]
+        st.caption(
+            "Die Gruppenauswahl ist nach der ersten Bildgenerierung für diese Sitzung gesperrt."
+        )
 
     base_prompt = task["groups"][selected_group]["prompt"]
     st.markdown("#### Ausgangs-Prompt")
     st.code(base_prompt, language=None)
 
-    if st.button("Ausgangsbild generieren", key="task4_image_generate", type="primary"):
+    if st.button(
+        "Ausgangsbild generieren",
+        key="task4_image_generate",
+        type="primary",
+        on_click=lock_task4_group,
+    ):
         with st.spinner("Die Bild-KI generiert …"):
             image_bytes = generate_image(base_prompt)
         if image_bytes:
@@ -806,12 +805,12 @@ def render_task4():
         if st.button(
             "Bild mit Anti-Klischee-Prompt generieren",
             key="task4_image_improved",
+            on_click=lock_task4_group,
         ):
             with st.spinner("Die Bild-KI generiert eine zweite Variante …"):
                 image_bytes = generate_image(improved_prompt)
             if image_bytes:
                 state["improved_images"][selected_group] = image_bytes
-                state["expert_evaluations"][selected_group] = ""
 
         improved_image = state["improved_images"].get(selected_group)
 
@@ -830,22 +829,6 @@ def render_task4():
                     caption="Mit Anti-Klischee-Hinweis",
                     use_container_width=True,
                 )
-
-            if st.button("Experten-Prompt auswerten", key="task4_expert_evaluate"):
-                with st.spinner("Die KI analysiert den Experten-Prompt …"):
-                    state["expert_evaluations"][selected_group] = evaluate_prompt(
-                        improved_prompt,
-                        (
-                            "Erzeuge ein Bild zu einer typischen Person in der ausgewählten Rolle "
-                            "und reduziere dabei bewusst Klischees über Geschlecht oder Alter."
-                        ),
-                        prompt_kind="Experten-Prompt",
-                    )
-
-            show_prompt_evaluation(
-                state["expert_evaluations"].get(selected_group, ""),
-                "Auswertung des Experten-Prompts",
-            )
 
             show_takeaway(task["takeaway"])
 

@@ -43,7 +43,7 @@
     "task_a": "Beschreibt, was euch an den KI-Bildern auffällt. Vergleicht sie mit der Wirklichkeit.",
     "task_b": "Erklärt mithilfe der Poster-Demo, woher solche Klischees kommen.",
     "task_c": "Nehmt Stellung: Bei Filmpostern darf sich die KI irren – wäre das auch okay, wenn dieselbe Technik eure Klassenarbeiten benotet? Begründet.",
-    "anti_bias_instruction": "Achte nun bewusst darauf, keine Klischees über Geschlecht oder Alter zu verwenden.",
+    "anti_bias_instruction": "Achte nun bewusst darauf, keine Klischees über Geschlecht, Hautfarbe oder Alter zu verwenden.",
     "takeaway": "Klischees können aus unausgewogenen Trainingsdaten entstehen. Ein Prompt kann sie dämpfen, ersetzt aber nicht die kritische Prüfung."
   }
 }
